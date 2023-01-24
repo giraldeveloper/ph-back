@@ -25,6 +25,12 @@ export const VALIDATION_ERROR_RESPONSE: ErrorResponse = {
   message: 'Bad Request',
 };
 
+export const NOT_FOUND: ErrorResponse = {
+  code: 'NF',
+  shortCode: 'NOT_FOUND',
+  message: 'Not found',
+};
+
 export const UNAUTHORIZED_RESPONSE: ErrorResponse = {
   code: 'UA',
   shortCode: 'UNAUTHORIZED',
@@ -41,5 +47,6 @@ export const ResponseEnums = {
   200: SUCCESSFUL_RESPONSE,
   422: VALIDATION_ERROR_RESPONSE,
   401: UNAUTHORIZED_RESPONSE,
+  404: NOT_FOUND,
   500: SERVER_ERROR_RESPONSE,
 };

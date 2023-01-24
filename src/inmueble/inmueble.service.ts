@@ -1,5 +1,6 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { throwError } from 'rxjs';
 import { Repository } from 'typeorm';
 import { CreateInmuebleDto } from './dto/create-inmueble.dto';
 import { UpdateInmuebleDto } from './dto/update-inmueble.dto';
@@ -38,6 +39,9 @@ export class InmuebleService {
 
   async update(id: string, updateInmuebleDto: UpdateInmuebleDto) {
     const inmuebleEntity: Inmueble = await this.findOne(id);
+    if (!inmuebleEntity)
+      return throwError(() => new HttpException({ message: 'Inmueble no encontrado' }, HttpStatus.NOT_FOUND));
+
     const { bloque, numero, tipo, activo } = updateInmuebleDto;
     inmuebleEntity.bloque = bloque;
     inmuebleEntity.numero = numero;
