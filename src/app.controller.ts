@@ -1,12 +1,14 @@
-import { Controller, Get } from '@nestjs/common';
-import { AppService } from './app.service';
+import { Controller, Get, HttpCode, Logger } from '@nestjs/common';
+import { version } from '../package.json';
 
 @Controller()
 export class AppController {
-  constructor(private readonly appService: AppService) {}
+  private readonly logger = new Logger(AppController.name);
 
-  @Get()
-  getHello(): string {
-    return this.appService.getHello();
+  @Get('/healthcheck')
+  @HttpCode(200)
+  async check() {
+    this.logger.debug(`healthcheck on ${Date.now()}`);
+    return { status: 'OK', version: version };
   }
 }
