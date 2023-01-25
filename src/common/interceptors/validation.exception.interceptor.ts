@@ -8,6 +8,7 @@ import {
   NestInterceptor,
 } from '@nestjs/common';
 import { catchError, Observable, throwError } from 'rxjs';
+import { QueryFailedError } from 'typeorm';
 import { ErrorResponse, ResponseEnums } from '../interfaces/responses';
 
 @Injectable()
@@ -16,12 +17,16 @@ export class ValidationExceptionInterceptor implements NestInterceptor {
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     return next.handle().pipe(
       catchError(err => {
-        this.logger.error(`ERROR_DETAIL: `, err);
+        this.logger.error(`ERROR_DETAIL: ${JSON.stringify(err)}`);
+        this.logger.error(err);
 
         let error: HttpException;
         if (err instanceof HttpException) {
           error = err;
-        } else {
+        } else if (err instanceof QueryFailedError) {
+          error = new HttpException(err, HttpStatus.UNPROCESSABLE_ENTITY);
+        }
+        else {
           error = new HttpException(err, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
