@@ -1,27 +1,19 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UsePipes, ValidationPipe, UseInterceptors } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
 import { InmuebleService } from './inmueble.service';
 import { CreateInmuebleDto } from './dto/create-inmueble.dto';
 import { UpdateInmuebleDto } from './dto/update-inmueble.dto';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
-import { ValidationExceptionInterceptor } from 'src/common/interceptors/validation.exception.interceptor';
-import { ResponseInterceptor } from 'src/common/interceptors/response.interceptor';
 
 @ApiTags('imbueble')
 @Controller('inmueble')
-@UsePipes(
-  new ValidationPipe({
-    enableDebugMessages: true,
-    transform: true,
-    skipMissingProperties: false,
-    whitelist: true,
-    forbidNonWhitelisted: true,
-    forbidUnknownValues: true,
-    errorHttpStatusCode: 422,
-  }),
-)
-@UseInterceptors(ValidationExceptionInterceptor, ResponseInterceptor)
 export class InmuebleController {
-  constructor(private readonly inmuebleService: InmuebleService) {}
+  constructor(private readonly inmuebleService: InmuebleService) { }
+
+  @Post()
+  @ApiOperation({ summary: 'Crear un imbueble' })
+  create(@Body() createInmuebleDto: CreateInmuebleDto) {
+    return this.inmuebleService.create(createInmuebleDto);
+  }
 
   @Get()
   @ApiOperation({ summary: 'Listar todos los inmuebles' })
@@ -33,12 +25,6 @@ export class InmuebleController {
   @ApiOperation({ summary: 'Buscar un imbueble por su id' })
   findOne(@Param('id') id: string) {
     return this.inmuebleService.findOne(id);
-  }
-
-  @Post()
-  @ApiOperation({ summary: 'Crear un imbueble' })
-  create(@Body() createInmuebleDto: CreateInmuebleDto) {
-    return this.inmuebleService.create(createInmuebleDto);
   }
 
   @Patch(':id')

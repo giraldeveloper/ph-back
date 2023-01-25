@@ -1,8 +1,10 @@
-import { Logger } from '@nestjs/common';
+import { Logger, ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { version } from '../package.json';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+import { ValidationExceptionInterceptor } from './common/interceptors/validation.exception.interceptor';
+import { ResponseInterceptor } from './common/interceptors/response.interceptor';
 
 async function bootstrap() {
   const logger = new Logger('Main');
@@ -19,6 +21,19 @@ async function bootstrap() {
     },
   });
   app.setGlobalPrefix(globalPrefix);
+  app.useGlobalPipes(new ValidationPipe({
+    enableDebugMessages: true,
+    transform: true,
+    skipMissingProperties: false,
+    whitelist: true,
+    forbidNonWhitelisted: true,
+    forbidUnknownValues: true,
+    errorHttpStatusCode: 422,
+  }));
+  app.useGlobalInterceptors(
+    new ValidationExceptionInterceptor(),
+    new ResponseInterceptor()
+  )
 
 
   const config = new DocumentBuilder()
@@ -26,12 +41,11 @@ async function bootstrap() {
     .setDescription('The PH API description')
     .setVersion(version)
     .setBasePath(globalPrefix)
-    .addTag('PH')
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
-  
-  
+
+
   const port = process.env.PORT || 3000;
   await app.listen(port);
 

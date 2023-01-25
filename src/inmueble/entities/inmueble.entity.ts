@@ -1,6 +1,7 @@
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, BaseEntity } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, BaseEntity, Index } from 'typeorm';
 
 @Entity("inmueble")
+@Index("inmueble_numero_idx", ["bloque", "numero"], { unique: true})
 export class Inmueble extends BaseEntity {
 
     @PrimaryGeneratedColumn("uuid")

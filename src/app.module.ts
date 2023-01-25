@@ -4,6 +4,7 @@ import { CommonModule } from './common/common.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { InmuebleModule } from './inmueble/inmueble.module';
 import { ConfigModule } from '@nestjs/config';
+import { PersonaModule } from './persona/persona.module';
 
 @Module({
   imports: [
@@ -21,7 +22,8 @@ import { ConfigModule } from '@nestjs/config';
       synchronize: true,
     }),
     CommonModule,
-    InmuebleModule
+    InmuebleModule,
+    PersonaModule,
   ],
   controllers: [AppController],
   providers: [],
