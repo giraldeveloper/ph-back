@@ -5,7 +5,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { InmuebleModule } from './inmueble/inmueble.module';
 import { ConfigModule } from '@nestjs/config';
 import { PersonaModule } from './persona/persona.module';
-import { InmuebleRoleModule } from './inmueble-role/inmueble-role.module';
 
 @Module({
   imports: [
@@ -20,12 +19,11 @@ import { InmuebleRoleModule } from './inmueble-role/inmueble-role.module';
       entities: [
         __dirname + '/../**/*.entity{.ts,.js}'
       ],
-      synchronize: true,
+      synchronize: (process.env.ENV === 'DEV-DB'),
     }),
     CommonModule,
     InmuebleModule,
     PersonaModule,
-    InmuebleRoleModule,
   ],
   controllers: [AppController],
   providers: [],

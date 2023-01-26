@@ -1,7 +1,10 @@
 import { CommonBaseEntityAudit } from 'src/common/entities/CommonBaseEntityAudit';
 import { ETipoIdentificacion } from 'src/common/enums/ETipoIdentificacion';
 import { ETipoPersona } from 'src/common/enums/ETipoPersona';
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, BaseEntity, Index } from 'typeorm';
+import { InmuebleApoderado } from 'src/inmueble/entities/inmueble-apoderado.entity';
+import { InmueblePropietario } from 'src/inmueble/entities/inmueble-propietario.entity';
+import { InmuebleResidente } from 'src/inmueble/entities/inmueble-residente.entity';
+import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, BaseEntity, Index, OneToMany } from 'typeorm';
 
 @Entity("persona")
 @Index("persona_identificacion_idx", ["tipoIdentificacion", "numeroIdentificacion"], { unique: true})
@@ -42,5 +45,16 @@ export class Persona extends CommonBaseEntityAudit {
 
     @Column({ default: true })
     activo: boolean;
+
+
+
+    @OneToMany(type => InmueblePropietario, inmueblePropietario => inmueblePropietario.propietario)
+    inmueblePropietarios: InmueblePropietario[];
+
+    @OneToMany(type => InmuebleApoderado, InmuebleApoderado => InmuebleApoderado.apoderado)
+    inmuebleApoderados: InmuebleApoderado[];
+
+    @OneToMany(type => InmuebleResidente, InmuebleResidente => InmuebleResidente.residente)
+    inmuebleResidentes: InmuebleResidente[];
 
 }
