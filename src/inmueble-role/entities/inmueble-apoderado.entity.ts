@@ -1,10 +1,13 @@
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, BaseEntity, Index } from 'typeorm';
+import { Entity, Column, CreateDateColumn, UpdateDateColumn, BaseEntity } from 'typeorm';
 
 
-@Entity("inmueble-apoderado")
+@Entity("inmueble_apoderado")
 export class InmuebleApoderado extends BaseEntity{
 
-    @Column({ length: 32, name: "apoderado", nullable: false })
+    @Column({ length: 36, name: "inmueble", nullable: false })
+    inmueble: string;
+
+    @Column({ length: 36, name: "apoderado", nullable: false })
     apoderado: string;
     
     @Column({ name: "fecha_desde" })
