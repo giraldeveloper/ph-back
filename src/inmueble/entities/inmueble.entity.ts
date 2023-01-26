@@ -1,8 +1,12 @@
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, BaseEntity, Index } from 'typeorm';
+import { CommonBaseEntityAudit } from 'src/common/entities/CommonBaseEntityAudit';
+import { InmueblePropietario } from 'src/inmueble/entities/inmueble-propietario.entity';
+import { Entity, Column, PrimaryGeneratedColumn, Index, OneToMany } from 'typeorm';
+import { InmuebleApoderado } from './inmueble-apoderado.entity';
+import { InmuebleResidente } from './inmueble-residente.entity';
 
 @Entity("inmueble")
 @Index("inmueble_numero_idx", ["bloque", "numero"], { unique: true})
-export class Inmueble extends BaseEntity {
+export class Inmueble extends CommonBaseEntityAudit {
 
     @PrimaryGeneratedColumn("uuid")
     id: string;
@@ -19,12 +23,14 @@ export class Inmueble extends BaseEntity {
     @Column({ default: true })
     activo: boolean;
 
-    @Column({ length: 45, name: "usuario_sistema", nullable: true })
-    usuarioSistema: string;
 
-    @CreateDateColumn({ name: "fecha_creacion" })
-    fechaCreacion: Date; // Creation date
+    @OneToMany(type => InmueblePropietario, inmueblePropietario => inmueblePropietario.inmueble)
+    inmueblePropietarios: InmueblePropietario[];
 
-    @UpdateDateColumn({ name: "fecha_modificacion" })
-    fechaModificacion: Date; // Last updated date
+    @OneToMany(type => InmuebleApoderado, inmuebleApoderado => inmuebleApoderado.inmueble)
+    inmuebleApoderados: InmuebleApoderado[];
+
+    @OneToMany(type => InmuebleResidente, inmuebleResidente => inmuebleResidente.inmueble)
+    inmuebleResidentes: InmuebleResidente[];
+
 }

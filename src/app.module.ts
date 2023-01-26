@@ -19,7 +19,7 @@ import { PersonaModule } from './persona/persona.module';
       entities: [
         __dirname + '/../**/*.entity{.ts,.js}'
       ],
-      synchronize: true,
+      synchronize: (process.env.ENV === 'DEV-DB'),
     }),
     CommonModule,
     InmuebleModule,
