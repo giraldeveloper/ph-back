@@ -1,11 +1,8 @@
 import { CommonBaseEntityAudit } from 'src/common/entities/CommonBaseEntityAudit';
-import { InmueblePropietario } from 'src/inmueble/entities/inmueble-propietario.entity';
-import { Entity, Column, PrimaryGeneratedColumn, Index, OneToMany } from 'typeorm';
-import { InmuebleApoderado } from './inmueble-apoderado.entity';
-import { InmuebleResidente } from './inmueble-residente.entity';
+import { Entity, Column, PrimaryGeneratedColumn, Index } from 'typeorm';
 
 @Entity("inmueble")
-@Index("inmueble_numero_idx", ["bloque", "numero"], { unique: true})
+@Index("inmueble_numero_idx", ["bloque", "numero"], { unique: true })
 export class Inmueble extends CommonBaseEntityAudit {
 
     @PrimaryGeneratedColumn("uuid")
@@ -22,15 +19,5 @@ export class Inmueble extends CommonBaseEntityAudit {
 
     @Column({ default: true })
     activo: boolean;
-
-
-    @OneToMany(type => InmueblePropietario, inmueblePropietario => inmueblePropietario.inmueble)
-    inmueblePropietarios: InmueblePropietario[];
-
-    @OneToMany(type => InmuebleApoderado, inmuebleApoderado => inmuebleApoderado.inmueble)
-    inmuebleApoderados: InmuebleApoderado[];
-
-    @OneToMany(type => InmuebleResidente, inmuebleResidente => inmuebleResidente.inmueble)
-    inmuebleResidentes: InmuebleResidente[];
 
 }
