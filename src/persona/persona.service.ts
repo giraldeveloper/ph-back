@@ -1,10 +1,13 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { throwError } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
+import { ETipoIdentificacion } from 'src/common/enums/ETipoIdentificacion';
+import { ETipoPersona } from 'src/common/enums/ETipoPersona';
+import { getKeyByValue } from 'src/common/enums/utils';
 import { Repository } from 'typeorm';
 import { CreatePersonaDto } from './dto/create-persona.dto';
 import { UpdatePersonaDto } from './dto/update-persona.dto';
-import { ETipoIdentificacion, ETipoPersona, Persona } from './entities/persona.entity';
+import { Persona } from './entities/persona.entity';
 
 @Injectable()
 export class PersonaService {
@@ -14,7 +17,7 @@ export class PersonaService {
     private personaRepository: Repository<Persona>,
   ) { }
 
-  async create(createPersonaDto: CreatePersonaDto) {
+  async create(createPersonaDto: CreatePersonaDto): Promise<Persona | Observable<never>> {
     const {
       tipoIdentificacion,
       numeroIdentificacion,
@@ -28,10 +31,14 @@ export class PersonaService {
       fechaNacimiento
     } = createPersonaDto;
 
-    const eTipoId: ETipoIdentificacion = ETipoIdentificacion[this.getKeyByValue(ETipoIdentificacion, tipoIdentificacion)];
-    const eTipoPerso: ETipoPersona = ETipoPersona[this.getKeyByValue(ETipoPersona, tipoPersona)];
+    const eTipoId: ETipoIdentificacion = ETipoIdentificacion[getKeyByValue(ETipoIdentificacion, tipoIdentificacion)];
+    const eTipoPerso: ETipoPersona = ETipoPersona[getKeyByValue(ETipoPersona, tipoPersona)];
 
-    const persona = await this.findByIdentification(eTipoId, numeroIdentificacion);
+    let persona = await this.findByIdentification(eTipoId, numeroIdentificacion);
+    if (!persona) persona = new Persona();
+
+    if (eTipoPerso !== ETipoPersona.NATURAL && razonSocial)
+      return throwError(() => new HttpException({ message: 'Persona natural no debe tener razón social' }, HttpStatus.UNPROCESSABLE_ENTITY));
 
     if (eTipoId === ETipoIdentificacion.NIT && !razonSocial)
       return throwError(() => new HttpException({ message: 'Documento NIT debe tener razón social' }, HttpStatus.UNPROCESSABLE_ENTITY));
@@ -85,8 +92,8 @@ export class PersonaService {
       activo
     } = updatePersonaDto;
 
-    const eTipoId: ETipoIdentificacion = ETipoIdentificacion[this.getKeyByValue(ETipoIdentificacion, tipoIdentificacion)];
-    const eTipoPerso: ETipoPersona = ETipoPersona[this.getKeyByValue(ETipoPersona, tipoPersona)];
+    const eTipoId: ETipoIdentificacion = ETipoIdentificacion[getKeyByValue(ETipoIdentificacion, tipoIdentificacion)];
+    const eTipoPerso: ETipoPersona = ETipoPersona[getKeyByValue(ETipoPersona, tipoPersona)];
 
     if (eTipoId === ETipoIdentificacion.NIT && !razonSocial)
       return throwError(() => new HttpException({ message: 'Documento NIT debe tener razón social' }, HttpStatus.UNPROCESSABLE_ENTITY));
@@ -113,10 +120,4 @@ export class PersonaService {
     await this.personaRepository.delete(id);
   }
 
-
-  private getKeyByValue<T>(e: T, value: string): string {
-    const indexOfFind = Object.values(e).indexOf(value as unknown as T);
-    const key = Object.keys(e)[indexOfFind];
-    return key;
-  }
 }

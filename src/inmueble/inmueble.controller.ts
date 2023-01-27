@@ -1,7 +1,6 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
 import { InmuebleService } from './inmueble.service';
-import { CreateInmuebleDto } from './dto/create-inmueble.dto';
-import { UpdateInmuebleDto } from './dto/update-inmueble.dto';
+import { InmuebleDto } from './dto/inmueble.dto';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('imbueble')
@@ -11,7 +10,7 @@ export class InmuebleController {
 
   @Post()
   @ApiOperation({ summary: 'Crear un imbueble' })
-  create(@Body() createInmuebleDto: CreateInmuebleDto) {
+  create(@Body() createInmuebleDto: InmuebleDto) {
     return this.inmuebleService.create(createInmuebleDto);
   }
 
@@ -29,7 +28,7 @@ export class InmuebleController {
 
   @Patch(':id')
   @ApiOperation({ summary: 'Actualizar un imbueble' })
-  update(@Param('id') id: string, @Body() updateInmuebleDto: UpdateInmuebleDto) {
+  update(@Param('id') id: string, @Body() updateInmuebleDto: InmuebleDto) {
     return this.inmuebleService.update(id, updateInmuebleDto);
   }
 

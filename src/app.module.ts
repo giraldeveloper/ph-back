@@ -20,7 +20,7 @@ import { VehiculoModule } from './vehiculo/vehiculo.module';
       entities: [
         __dirname + '/../**/*.entity{.ts,.js}'
       ],
-      synchronize: true,
+      synchronize: (process.env.ENV === 'DEV-DB'),
     }),
     CommonModule,
     InmuebleModule,
