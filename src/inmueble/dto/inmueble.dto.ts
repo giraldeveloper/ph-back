@@ -1,9 +1,9 @@
-import { IsString, IsNotEmpty, Length, IsOptional, IsArray, ValidateNested } from 'class-validator';
+import { IsString, IsNotEmpty, Length, IsOptional, IsArray, ValidateNested, IsBoolean } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { CreatePersonaDto } from 'src/persona/dto/create-persona.dto';
 import { Type } from 'class-transformer';
 
-export class CreateInmuebleDto {
+export class InmuebleDto {
 
   @IsString()
   @IsNotEmpty()
@@ -22,6 +22,11 @@ export class CreateInmuebleDto {
   @Length(1, 45)
   @ApiProperty({ example: "APARTAMENTO", description: 'Tipo de imbueble' })
   tipo: string;
+
+  @IsOptional()
+  @IsBoolean()
+  @ApiProperty({ example: true, description: 'Imbueble activo? (estado)' })
+  activo?: boolean;
 
 
   @IsOptional()

@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { throwError } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
 import { ETipoIdentificacion } from 'src/common/enums/ETipoIdentificacion';
 import { ETipoPersona } from 'src/common/enums/ETipoPersona';
 import { getKeyByValue } from 'src/common/enums/utils';
@@ -17,7 +17,7 @@ export class PersonaService {
     private personaRepository: Repository<Persona>,
   ) { }
 
-  async create(createPersonaDto: CreatePersonaDto) {
+  async create(createPersonaDto: CreatePersonaDto): Promise<Persona | Observable<never>> {
     const {
       tipoIdentificacion,
       numeroIdentificacion,
@@ -34,12 +34,11 @@ export class PersonaService {
     const eTipoId: ETipoIdentificacion = ETipoIdentificacion[getKeyByValue(ETipoIdentificacion, tipoIdentificacion)];
     const eTipoPerso: ETipoPersona = ETipoPersona[getKeyByValue(ETipoPersona, tipoPersona)];
 
-    console.log(eTipoId)
-    console.log(eTipoPerso)
-
     let persona = await this.findByIdentification(eTipoId, numeroIdentificacion);
     if (!persona) persona = new Persona();
-    console.log(persona)
+
+    if (eTipoPerso !== ETipoPersona.NATURAL && razonSocial)
+      return throwError(() => new HttpException({ message: 'Persona natural no debe tener razón social' }, HttpStatus.UNPROCESSABLE_ENTITY));
 
     if (eTipoId === ETipoIdentificacion.NIT && !razonSocial)
       return throwError(() => new HttpException({ message: 'Documento NIT debe tener razón social' }, HttpStatus.UNPROCESSABLE_ENTITY));

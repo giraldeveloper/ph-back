@@ -16,31 +16,37 @@ export class ValidationExceptionInterceptor implements NestInterceptor {
   private readonly logger = new Logger(ValidationExceptionInterceptor.name);
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     return next.handle().pipe(
-      catchError(err => {
-        this.logger.error(`ERROR_DETAIL: ${JSON.stringify(err)}`);
-        this.logger.error(err);
+      catchError(e => {
+        this.logger.error(`ERROR_DETAIL: ${JSON.stringify(e)}`);
+        this.logger.error(e);
 
         let error: HttpException;
-        if (err instanceof HttpException) {
-          error = err;
-        } else if (err instanceof QueryFailedError) {
-          error = new HttpException(err, HttpStatus.UNPROCESSABLE_ENTITY);
-        }
-        else {
-          error = new HttpException(err, HttpStatus.INTERNAL_SERVER_ERROR);
+
+        if (e instanceof HttpException) {
+          error = e;
+        } else if (e instanceof QueryFailedError) {
+          error = new HttpException(e, HttpStatus.UNPROCESSABLE_ENTITY);
+        } else {
+          error = new HttpException(e, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
-        const errorResponse: ErrorResponse = ResponseEnums[error.getStatus()];
-        if (
-          err.response &&
-          error.getStatus() === HttpStatus.UNPROCESSABLE_ENTITY
-        ) {
-          if (typeof err.response.message == 'string')
-            err.response.message = [err.response.message];
-          errorResponse.errors = err?.response?.message || 'Unknown error';
-        } else {
-          if ((process.env.ENV || 'PROD') != 'PROD')
-            errorResponse.stacktraces = err;
+        let errorResponse: ErrorResponse = Object.assign({}, ResponseEnums[error.getStatus()])
+
+        if (e.response && error.getStatus() === HttpStatus.UNPROCESSABLE_ENTITY) {
+          if (typeof e.response.message == 'string') {
+            e.response.message = [e.response.message];
+          }
+          errorResponse.errors = e?.response?.message || 'Unknown error';
+        }
+
+        if (e instanceof QueryFailedError) {
+          errorResponse.message = e.driverError.sqlMessage;
+          const { code, errno, sqlState, sqlMessage } = e.driverError;
+          errorResponse.errors = { code, errno, sqlState, sqlMessage };
+        }
+
+        if ((process.env.ENV || 'PROD') != 'PROD') {
+          errorResponse.stacktraces = e;
         }
 
         return throwError(
