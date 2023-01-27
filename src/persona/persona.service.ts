@@ -37,6 +37,9 @@ export class PersonaService {
     let persona = await this.findByIdentification(eTipoId, numeroIdentificacion);
     if (!persona) persona = new Persona();
 
+    if (eTipoPerso !== ETipoPersona.NATURAL && razonSocial)
+      return throwError(() => new HttpException({ message: 'Persona natural no debe tener razón social' }, HttpStatus.UNPROCESSABLE_ENTITY));
+
     if (eTipoId === ETipoIdentificacion.NIT && !razonSocial)
       return throwError(() => new HttpException({ message: 'Documento NIT debe tener razón social' }, HttpStatus.UNPROCESSABLE_ENTITY));
 
