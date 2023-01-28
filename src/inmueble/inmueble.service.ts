@@ -74,24 +74,30 @@ export class InmuebleService {
 
     inmueble = await this.inmuebleRepository.save(inmueble);
 
-    for (const propietario of propietarios) {
-      const persona = await this.personaService.create(propietario);
-      if (persona instanceof Persona) {
-        this.createInmueblePropietario(inmueble, persona);
+    if (propietarios) {
+      for (const propietario of propietarios) {
+        const persona = await this.personaService.create(propietario);
+        if (persona instanceof Persona) {
+          this.createInmueblePropietario(inmueble, persona);
+        }
       }
     }
 
-    for (const apoderado of apoderados) {
-      const persona = await this.personaService.create(apoderado);
-      if (persona instanceof Persona) {
-        this.createInmuebleApoderado(inmueble, persona);
+    if (apoderados) {
+      for (const apoderado of apoderados) {
+        const persona = await this.personaService.create(apoderado);
+        if (persona instanceof Persona) {
+          this.createInmuebleApoderado(inmueble, persona);
+        }
       }
     }
 
-    for (const residente of residentes) {
-      const persona = await this.personaService.create(residente);
-      if (persona instanceof Persona) {
-        this.createInmuebleResidente(inmueble, persona);
+    if (residentes) {
+      for (const residente of residentes) {
+        const persona = await this.personaService.create(residente);
+        if (persona instanceof Persona) {
+          this.createInmuebleResidente(inmueble, persona);
+        }
       }
     }
   }
@@ -107,15 +113,15 @@ export class InmuebleService {
     let inmueblePropietario = await this.findInmueblePropietario(inmueble.id, propietario.id);
     if (!inmueblePropietario) inmueblePropietario = new InmueblePropietario();
 
-    inmueblePropietario.inmueble = inmueble.id;
-    inmueblePropietario.propietario = propietario.id;
+    inmueblePropietario.inmuebleId = inmueble.id;
+    inmueblePropietario.propietarioId = propietario.id;
     inmueblePropietario.fechaDesde = new Date()
     inmueblePropietario = await this.inmueblePropietarioRepository.save(inmueblePropietario);
     return inmueblePropietario;
   }
 
   async findInmueblePropietario(inmueble: string, propietario: string): Promise<InmueblePropietario | undefined> {
-    return await this.inmueblePropietarioRepository.findOneBy({ inmueble, propietario });
+    return await this.inmueblePropietarioRepository.findOneBy({ inmuebleId: inmueble, propietarioId: propietario});
   }
 
   async createInmuebleApoderado(inmueble: Inmueble, apoderado: Persona): Promise<InmuebleApoderado> {
@@ -123,15 +129,15 @@ export class InmuebleService {
     let inmuebleApoderado = await this.findInmuebleApoderado(inmueble.id, apoderado.id);
     if (!inmuebleApoderado) inmuebleApoderado = new InmuebleApoderado();
 
-    inmuebleApoderado.inmueble = inmueble.id;
-    inmuebleApoderado.apoderado = apoderado.id;
+    inmuebleApoderado.inmuebleId = inmueble.id;
+    inmuebleApoderado.apoderadoId = apoderado.id;
     inmuebleApoderado.fechaDesde = new Date()
     inmuebleApoderado = await this.inmuebleApoderadoRepository.save(inmuebleApoderado);
     return inmuebleApoderado;
   }
 
   async findInmuebleApoderado(inmueble: string, apoderado: string): Promise<InmuebleApoderado | undefined> {
-    return await this.inmuebleApoderadoRepository.findOneBy({ inmueble, apoderado });
+    return await this.inmuebleApoderadoRepository.findOneBy({ inmuebleId: inmueble, apoderadoId: apoderado});
   }
 
   async createInmuebleResidente(inmueble: Inmueble, apoderado: Persona): Promise<InmuebleResidente> {
@@ -139,15 +145,15 @@ export class InmuebleService {
     let inmuebleResidente = await this.findInmuebleResidente(inmueble.id, apoderado.id);
     if (!inmuebleResidente) inmuebleResidente = new InmuebleResidente();
 
-    inmuebleResidente.inmueble = inmueble.id;
-    inmuebleResidente.residente = apoderado.id;
+    inmuebleResidente.inmuebleId = inmueble.id;
+    inmuebleResidente.residenteId = apoderado.id;
     inmuebleResidente.fechaDesde = new Date()
     inmuebleResidente = await this.inmuebleResidenteRepository.save(inmuebleResidente);
     return inmuebleResidente;
   }
 
   async findInmuebleResidente(inmueble: string, residente: string): Promise<InmuebleResidente | undefined> {
-    return await this.inmuebleResidenteRepository.findOneBy({ inmueble, residente });
+    return await this.inmuebleResidenteRepository.findOneBy({ inmuebleId: inmueble, residenteId: residente });
   }
 
 }
