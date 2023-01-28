@@ -1,10 +1,10 @@
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, BaseEntity, Index } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, BaseEntity, Index, JoinColumn } from 'typeorm';
 import { ETipoVehiculo } from 'src/common/enums/ETipoVehiculo';
 import { CommonBaseEntityAudit } from 'src/common/entities/CommonBaseEntityAudit';
 
 
 @Entity("vehiculo")
-@Index("vehiculo_idx", ["id"], { unique: true})
+@Index("vehiculo_idx", ["placa"], { unique: true})
 export class Vehiculo extends CommonBaseEntityAudit {
     
     @PrimaryGeneratedColumn("uuid")
@@ -21,5 +21,9 @@ export class Vehiculo extends CommonBaseEntityAudit {
 
     @Column({ default: true })
     activo: boolean;
+
+    @Column({ length: 36, name: "inmueble", nullable: false })
+    @JoinColumn({ name: 'inmueble' })
+    inmuebleId: string;
 
 }
