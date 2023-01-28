@@ -4,7 +4,9 @@ import { throwError } from 'rxjs';
 import { Repository } from 'typeorm';
 import { CreateVehiculoDto } from './dto/create-vehiculo.dto';
 import { UpdateVehiculoDto } from './dto/update-vehiculo.dto';
-import { ETipoVehiculo, Vehiculo } from './entities/vehiculo.entity';
+import { Vehiculo } from './entities/vehiculo.entity';
+import { ETipoVehiculo } from 'src/common/enums/ETipoVehiculo';
+import { getKeyByValue } from 'src/common/enums/utils';
 
 @Injectable()
 export class VehiculoService {
@@ -22,7 +24,7 @@ export class VehiculoService {
       color
     } = createVehiculoDto;
     
-    const eTipoVehiculo: ETipoVehiculo = ETipoVehiculo[this.getKeyByValue(ETipoVehiculo, tipoVehiculo)];
+    const eTipoVehiculo: ETipoVehiculo = ETipoVehiculo[getKeyByValue(ETipoVehiculo, tipoVehiculo)];
     const vehiculo: Vehiculo = Vehiculo.create();
 
     vehiculo.tipoVehiculo = eTipoVehiculo
@@ -54,7 +56,7 @@ export class VehiculoService {
       activo
     } = UpdateVehiculoDto;
 
-    const eTipoVehiculo: ETipoVehiculo = ETipoVehiculo[this.getKeyByValue(ETipoVehiculo, tipoVehiculo)];
+    const eTipoVehiculo: ETipoVehiculo = ETipoVehiculo[getKeyByValue(ETipoVehiculo, tipoVehiculo)];
 
     vehiculo.tipoVehiculo = eTipoVehiculo
     vehiculo.placa = placa;
@@ -69,9 +71,4 @@ export class VehiculoService {
     await this.vehiculoRepository.delete(id);
   }
 
-  private getKeyByValue<T>(e: T, value: string): string {
-    const indexOfFind = Object.values(e).indexOf(value as unknown as T);
-    const key = Object.keys(e)[indexOfFind];
-    return key;
-  }
 }

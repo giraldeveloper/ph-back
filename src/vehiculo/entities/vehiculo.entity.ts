@@ -1,13 +1,11 @@
 import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, BaseEntity, Index } from 'typeorm';
+import { ETipoVehiculo } from 'src/common/enums/ETipoVehiculo';
+import { CommonBaseEntityAudit } from 'src/common/entities/CommonBaseEntityAudit';
 
-export enum ETipoVehiculo {
-    MOTOCICLETA = 'motocicleta',
-    CARRO = 'carro',
-}
 
 @Entity("vehiculo")
 @Index("vehiculo_idx", ["id"], { unique: true})
-export class Vehiculo extends BaseEntity{
+export class Vehiculo extends CommonBaseEntityAudit {
     
     @PrimaryGeneratedColumn("uuid")
     id: string;
@@ -23,14 +21,5 @@ export class Vehiculo extends BaseEntity{
 
     @Column({ default: true })
     activo: boolean;
-
-    @Column({ length: 45, name: "usuario_sistema", nullable: true })
-    usuarioSistema: string;
-
-    @CreateDateColumn({ name: "fecha_creacion" })
-    fechaCreacion: Date; // Creation date
-
-    @UpdateDateColumn({ name: "fecha_modificacion" })
-    fechaModificacion: Date; // Last updated date
 
 }
