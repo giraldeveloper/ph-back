@@ -1,7 +1,6 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
 import { VehiculoService } from './vehiculo.service';
-import { CreateVehiculoDto } from './dto/create-vehiculo.dto';
-import { UpdateVehiculoDto } from './dto/update-vehiculo.dto';
+import { VehiculoDto } from './dto/vehiculo.dto';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('vehiculo')
@@ -11,7 +10,7 @@ export class VehiculoController {
 
   @Post()
   @ApiOperation({ summary: 'Agregar un vehículo' })
-  create(@Body() createVehiculoDto: CreateVehiculoDto) {
+  create(@Body() createVehiculoDto: VehiculoDto) {
     return this.vehiculoService.create(createVehiculoDto);
   }
 
@@ -24,18 +23,18 @@ export class VehiculoController {
   @Get(':id')
   @ApiOperation({ summary: 'Buscar un vehículo por su id del registro' })
   findOne(@Param('id') id: string) {
-    return this.vehiculoService.findOne(+id);
+    return this.vehiculoService.findOne(id);
   }
 
   @Patch(':id')
   @ApiOperation({ summary: 'Actualizar un vehículo' })
-  update(@Param('id') id: string, @Body() updateVehiculoDto: UpdateVehiculoDto) {
-    return this.vehiculoService.update(+id, updateVehiculoDto);
+  update(@Param('id') id: string, @Body() updateVehiculoDto: VehiculoDto) {
+    return this.vehiculoService.update(id, updateVehiculoDto);
   }
 
   @Delete(':id')
   @ApiOperation({ summary: 'Eliminar un vehículo' })
   remove(@Param('id') id: string) {
-    return this.vehiculoService.remove(+id);
+    return this.vehiculoService.remove(id);
   }
 }
