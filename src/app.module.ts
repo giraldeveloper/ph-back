@@ -6,6 +6,7 @@ import { InmuebleModule } from './inmueble/inmueble.module';
 import { ConfigModule } from '@nestjs/config';
 import { PersonaModule } from './persona/persona.module';
 import { VehiculoModule } from './vehiculo/vehiculo.module';
+import { ContactoModule } from './contacto/contacto.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { VehiculoModule } from './vehiculo/vehiculo.module';
     InmuebleModule,
     PersonaModule,
     VehiculoModule,
+    ContactoModule,
   ],
   controllers: [AppController],
   providers: [],

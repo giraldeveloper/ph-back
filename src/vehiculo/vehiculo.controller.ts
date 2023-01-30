@@ -28,6 +28,12 @@ export class VehiculoController {
     return this.vehiculoService.findAll();
   }
 
+  @Get('inmueble/:id')
+  @ApiOperation({ summary: 'Buscar todos los vehiculos de un imbueble' })
+  findAllByInmueble(@Param('id') inmuebleId: string) {
+    return this.vehiculoService.findByInmueble(inmuebleId);
+  }
+
   @Get(':id')
   @ApiOperation({ summary: 'Buscar un vehículo por su id del registro' })
   findOne(@Param('id') id: string) {
