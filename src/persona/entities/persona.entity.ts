@@ -4,6 +4,7 @@ import { ETipoPersona } from 'src/common/enums/ETipoPersona';
 import { InmuebleApoderado } from 'src/inmueble/entities/inmueble-apoderado.entity';
 import { InmueblePropietario } from 'src/inmueble/entities/inmueble-propietario.entity';
 import { InmuebleResidente } from 'src/inmueble/entities/inmueble-residente.entity';
+import { Contacto } from '../../contacto/entities/contacto.entity';
 import {
   Entity,
   Column,
@@ -82,4 +83,7 @@ export class Persona extends CommonBaseEntityAudit {
     (inmuebleResidente) => inmuebleResidente.residente,
   )
   public inmueblesResidentes!: Promise<InmuebleResidente[]>;
+
+  @OneToMany(() => Contacto, (contacto) => contacto.persona) // { eager: true, }
+  public contactos?: Promise<Contacto[]>;
 }

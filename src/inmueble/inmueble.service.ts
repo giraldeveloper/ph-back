@@ -26,7 +26,7 @@ export class InmuebleService {
     private inmuebleApoderadoRepository: Repository<InmuebleApoderado>,
     @InjectRepository(InmuebleResidente)
     private inmuebleResidenteRepository: Repository<InmuebleResidente>,
-  ) { }
+  ) {}
 
   async create(inmuebleDto: CreateInmuebleDto) {
     try {

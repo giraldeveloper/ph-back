@@ -41,9 +41,9 @@ export class VehiculoService {
     });
   }
 
-  async findByInmueble(inmueble: string): Promise<Vehiculo[] | undefined> {
+  async findByInmueble(inmuebleId: string): Promise<Vehiculo[] | undefined> {
     return await this.vehiculoRepository.findBy({
-      inmuebleId: inmueble,
+      inmuebleId: inmuebleId,
     });
   }
 
