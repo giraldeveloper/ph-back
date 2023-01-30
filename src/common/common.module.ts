@@ -4,15 +4,8 @@ import { ValidationExceptionInterceptor } from './interceptors/validation.except
 
 @Global()
 @Module({
-  imports: [
-  ],
-  providers: [
-    ValidationExceptionInterceptor,
-    ResponseInterceptor
-  ],
-  exports: [
-    ValidationExceptionInterceptor,
-    ResponseInterceptor,
-  ],
+  imports: [],
+  providers: [ValidationExceptionInterceptor, ResponseInterceptor],
+  exports: [ValidationExceptionInterceptor, ResponseInterceptor],
 })
-export class CommonModule { }
+export class CommonModule {}

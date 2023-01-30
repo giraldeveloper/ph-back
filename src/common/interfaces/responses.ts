@@ -25,6 +25,12 @@ export const VALIDATION_ERROR_RESPONSE: ErrorResponse = {
   message: 'Bad Request',
 };
 
+export const DATABASE_ERROR_RESPONSE: ErrorResponse = {
+  code: 'DB',
+  shortCode: 'DATABASE_ERROR',
+  message: 'Data Base Error',
+};
+
 export const NOT_FOUND: ErrorResponse = {
   code: 'NF',
   shortCode: 'NOT_FOUND',
@@ -45,8 +51,10 @@ export const SERVER_ERROR_RESPONSE: ErrorResponse = {
 
 export const ResponseEnums = {
   200: SUCCESSFUL_RESPONSE,
-  422: VALIDATION_ERROR_RESPONSE,
   401: UNAUTHORIZED_RESPONSE,
+  406: DATABASE_ERROR_RESPONSE,
+  409: DATABASE_ERROR_RESPONSE,
   404: NOT_FOUND,
+  422: VALIDATION_ERROR_RESPONSE,
   500: SERVER_ERROR_RESPONSE,
 };

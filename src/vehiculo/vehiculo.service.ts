@@ -9,36 +9,22 @@ import { getKeyByValue } from 'src/common/enums/utils';
 
 @Injectable()
 export class VehiculoService {
-
   constructor(
     @InjectRepository(Vehiculo)
     private vehiculoRepository: Repository<Vehiculo>,
-  ) { }
-
+  ) {}
 
   async create(createVehiculoDto: VehiculoDto) {
-    const {
-      tipoVehiculo,
-      placa,
-      color,
-      activo, 
-      inmuebleId
-    } = createVehiculoDto;
-
-    const eTipoVehiculo: ETipoVehiculo = ETipoVehiculo[getKeyByValue(ETipoVehiculo, tipoVehiculo)];
-
-    let vehiculo = await this.findByPlaca(placa);
-    if (!vehiculo) vehiculo = new Vehiculo();
-
-    vehiculo.tipoVehiculo = eTipoVehiculo
-    vehiculo.placa = placa;
-    vehiculo.color = color;
-    vehiculo.inmuebleId = inmuebleId;
-
-    if (typeof activo !== undefined)
-      vehiculo.activo = activo
-
-    return await this.vehiculoRepository.save(vehiculo);
+    try {
+      let vehiculo = await this.findByPlaca(createVehiculoDto.placa);
+      vehiculo = this.perseVehiculoDtoToVehiculoEntity(
+        createVehiculoDto,
+        vehiculo,
+      );
+      return await this.vehiculoRepository.save(vehiculo);
+    } catch (error) {
+      return throwError(() => error);
+    }
   }
 
   findAll(): Promise<Vehiculo[]> {
@@ -50,38 +36,63 @@ export class VehiculoService {
   }
 
   async findByPlaca(placa: string): Promise<Vehiculo | undefined> {
-    return await this.vehiculoRepository.findOneBy({ placa });
+    return await this.vehiculoRepository.findOneBy({
+      placa: this.cleanPlaca(placa),
+    });
   }
 
-  async update(id: string, UpdateVehiculoDto: VehiculoDto) {
+  async findByInmueble(inmueble: string): Promise<Vehiculo[] | undefined> {
+    return await this.vehiculoRepository.findBy({
+      inmuebleId: inmueble,
+    });
+  }
 
-    const vehiculo: Vehiculo = await this.findOne(id);
+  async update(id: string, updateVehiculoDto: VehiculoDto) {
+    let vehiculo: Vehiculo = await this.findOne(id);
 
     if (!vehiculo)
-      return throwError(() => new HttpException({ message: 'Vehículo no encontrado' }, HttpStatus.UNPROCESSABLE_ENTITY));
+      return throwError(
+        () =>
+          new HttpException(
+            { message: 'Vehículo no encontrado' },
+            HttpStatus.UNPROCESSABLE_ENTITY,
+          ),
+      );
 
-    const {
-      tipoVehiculo,
-      placa,
-      color,
-      activo,
-      inmuebleId
-    } = UpdateVehiculoDto;
-
-    const eTipoVehiculo: ETipoVehiculo = ETipoVehiculo[getKeyByValue(ETipoVehiculo, tipoVehiculo)];
-
-    vehiculo.tipoVehiculo = eTipoVehiculo
-    vehiculo.placa = placa;
-    vehiculo.color = color;
-    vehiculo.activo = activo;
-    vehiculo.inmuebleId = inmuebleId;
+    vehiculo = this.perseVehiculoDtoToVehiculoEntity(
+      updateVehiculoDto,
+      vehiculo,
+    );
 
     return await this.vehiculoRepository.save(vehiculo);
-
   }
 
   async remove(id: string): Promise<void> {
     await this.vehiculoRepository.delete(id);
   }
 
+  cleanPlaca(placa: string): string {
+    return placa.toUpperCase().replace(/[^\w\d]/gi, '');
+  }
+
+  perseVehiculoDtoToVehiculoEntity(
+    createVehiculoDto: VehiculoDto,
+    vehiculo: Vehiculo = undefined,
+  ): Vehiculo {
+    const { tipoVehiculo, placa, color, activo, inmuebleId } =
+      createVehiculoDto;
+
+    const eTipoVehiculo: ETipoVehiculo =
+      ETipoVehiculo[getKeyByValue(ETipoVehiculo, tipoVehiculo)];
+
+    if (!vehiculo) vehiculo = new Vehiculo();
+
+    vehiculo.tipoVehiculo = eTipoVehiculo;
+    vehiculo.placa = this.cleanPlaca(placa);
+    vehiculo.color = color;
+    vehiculo.inmuebleId = inmuebleId;
+    vehiculo.activo = typeof activo !== undefined ? activo : true;
+
+    return vehiculo;
+  }
 }

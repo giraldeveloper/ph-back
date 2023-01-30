@@ -17,10 +17,8 @@ import { VehiculoModule } from './vehiculo/vehiculo.module';
       username: process.env.MYSQL_USER || 'root',
       password: process.env.MYSQL_PASSWORD || 'root',
       database: process.env.MYSQL_DATABASE || 'test',
-      entities: [
-        __dirname + '/../**/*.entity{.ts,.js}'
-      ],
-      synchronize: (process.env.ENV === 'DEV-DB'),
+      entities: [__dirname + '/../**/*.entity{.ts,.js}'],
+      synchronize: process.env.ENV === 'DEV-DB',
     }),
     CommonModule,
     InmuebleModule,
@@ -30,4 +28,4 @@ import { VehiculoModule } from './vehiculo/vehiculo.module';
   controllers: [AppController],
   providers: [],
 })
-export class AppModule { }
+export class AppModule {}

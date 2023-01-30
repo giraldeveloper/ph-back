@@ -1,4 +1,4 @@
 export enum ETipoPersona {
-    NATURAL = 'natural',
-    JURIDICA = 'juridica',
+  NATURAL = 'natural',
+  JURIDICA = 'juridica',
 }
