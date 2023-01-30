@@ -179,7 +179,7 @@ export class InmuebleService {
       where: { inmuebleId: inmueble.id },
     });
     const propietarios: Persona[] = [];
-    inmueblePropietarios.map(async (p) => {
+    inmueblePropietarios.map(async p => {
       propietarios.push(await Promise.resolve(p.propietario));
     });
 
@@ -190,7 +190,7 @@ export class InmuebleService {
       where: { inmuebleId: inmueble.id },
     });
     const apoderados: Persona[] = [];
-    inmuebleApoderados.map(async (p) => {
+    inmuebleApoderados.map(async p => {
       apoderados.push(await Promise.resolve(p.apoderado));
     });
 
@@ -201,7 +201,7 @@ export class InmuebleService {
       where: { inmuebleId: inmueble.id },
     });
     const residentes: Persona[] = [];
-    inmuebleResidentes.map(async (p) => {
+    inmuebleResidentes.map(async p => {
       residentes.push(await Promise.resolve(p.residente));
     });
 

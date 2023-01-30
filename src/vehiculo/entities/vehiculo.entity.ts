@@ -37,7 +37,7 @@ export class Vehiculo extends CommonBaseEntityAudit {
   @JoinColumn({ name: 'inmueble' })
   inmuebleId: string;
 
-  @ManyToOne(() => Inmueble, (inmueble) => inmueble.vehiculos)
+  @ManyToOne(() => Inmueble, inmueble => inmueble.vehiculos)
   @JoinColumn({ name: 'inmueble' })
   public inmueble?: Promise<Inmueble>;
 }

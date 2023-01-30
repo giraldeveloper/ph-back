@@ -20,11 +20,11 @@ export class InmuebleResidente extends CommonBaseEntityAudit {
   @Column({ default: true })
   activo: boolean;
 
-  @ManyToOne(() => Inmueble, (inmueble) => inmueble.residentes)
+  @ManyToOne(() => Inmueble, inmueble => inmueble.residentes)
   @JoinColumn({ name: 'inmueble' })
   public inmueble!: Promise<Inmueble>;
 
-  @ManyToOne(() => Persona, (residente) => residente.inmueblesResidentes, {
+  @ManyToOne(() => Persona, residente => residente.inmueblesResidentes, {
     eager: true,
   })
   @JoinColumn({ name: 'residente' })

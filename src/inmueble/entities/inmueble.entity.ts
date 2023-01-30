@@ -31,22 +31,22 @@ export class Inmueble extends CommonBaseEntityAudit {
 
   @OneToMany(
     () => InmueblePropietario,
-    (imbueblePropietario) => imbueblePropietario.inmueble,
+    imbueblePropietario => imbueblePropietario.inmueble,
   )
   public propietarios?: Promise<InmueblePropietario[]>;
 
   @OneToMany(
     () => InmuebleApoderado,
-    (inmuebleApoderado) => inmuebleApoderado.inmueble,
+    inmuebleApoderado => inmuebleApoderado.inmueble,
   )
   public apoderados?: Promise<InmuebleApoderado[]>;
 
   @OneToMany(
     () => InmuebleResidente,
-    (inmuebleResidente) => inmuebleResidente.inmueble,
+    inmuebleResidente => inmuebleResidente.inmueble,
   )
   public residentes?: Promise<InmuebleResidente[]>;
 
-  @OneToMany(() => Vehiculo, (vehiculo) => vehiculo.inmueble) // { eager: true, }
+  @OneToMany(() => Vehiculo, vehiculo => vehiculo.inmueble) // { eager: true, }
   public vehiculos?: Promise<Vehiculo[]>;
 }

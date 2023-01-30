@@ -68,22 +68,22 @@ export class Persona extends CommonBaseEntityAudit {
 
   @OneToMany(
     () => InmueblePropietario,
-    (imbueblePropietario) => imbueblePropietario.propietario,
+    imbueblePropietario => imbueblePropietario.propietario,
   )
   public inmueblesPropios!: Promise<InmueblePropietario[]>;
 
   @OneToMany(
     () => InmuebleApoderado,
-    (inmuebleApoderado) => inmuebleApoderado.apoderado,
+    inmuebleApoderado => inmuebleApoderado.apoderado,
   )
   public inmueblesApoderados!: Promise<InmuebleApoderado[]>;
 
   @OneToMany(
     () => InmuebleResidente,
-    (inmuebleResidente) => inmuebleResidente.residente,
+    inmuebleResidente => inmuebleResidente.residente,
   )
   public inmueblesResidentes!: Promise<InmuebleResidente[]>;
 
-  @OneToMany(() => Contacto, (contacto) => contacto.persona) // { eager: true, }
+  @OneToMany(() => Contacto, contacto => contacto.persona) // { eager: true, }
   public contactos?: Promise<Contacto[]>;
 }
