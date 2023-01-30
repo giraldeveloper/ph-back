@@ -36,7 +36,7 @@ export class Contacto extends CommonBaseEntityAudit {
   @Column({ default: true })
   activo: boolean;
 
-  @ManyToOne(() => Persona, (persona) => persona.contactos)
+  @ManyToOne(() => Persona, persona => persona.contactos)
   @JoinColumn({ name: 'persona' })
   public persona?: Promise<Persona>;
 }

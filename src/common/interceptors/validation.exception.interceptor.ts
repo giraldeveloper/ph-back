@@ -16,7 +16,7 @@ export class ValidationExceptionInterceptor implements NestInterceptor {
   private readonly logger = new Logger(ValidationExceptionInterceptor.name);
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     return next.handle().pipe(
-      catchError((e) => {
+      catchError(e => {
         this.logger.error(`ERROR_DETAIL: ${JSON.stringify(e)}`);
         this.logger.error(e);
 
