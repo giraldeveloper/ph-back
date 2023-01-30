@@ -15,7 +15,7 @@ export class ResponseInterceptor implements NestInterceptor {
     next: CallHandler,
   ): Observable<SuccessResponse> {
     return next.handle().pipe(
-      map(response => {
+      map((response) => {
         const successResponse: SuccessResponse = SUCCESSFUL_RESPONSE;
         successResponse.data = response;
         return successResponse;

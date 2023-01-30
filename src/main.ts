@@ -13,7 +13,6 @@ async function bootstrap() {
   if ((process.env.ENV || 'PROD') == 'DEV')
     logger.debug(`enviroment vars: ${JSON.stringify(process.env)}`);
 
-
   const app = await NestFactory.create(AppModule, {
     cors: {
       allowedHeaders: '*',
@@ -21,20 +20,21 @@ async function bootstrap() {
     },
   });
   app.setGlobalPrefix(globalPrefix);
-  app.useGlobalPipes(new ValidationPipe({
-    enableDebugMessages: true,
-    transform: true,
-    skipMissingProperties: false,
-    whitelist: true,
-    forbidNonWhitelisted: true,
-    forbidUnknownValues: true,
-    errorHttpStatusCode: 422,
-  }));
+  app.useGlobalPipes(
+    new ValidationPipe({
+      enableDebugMessages: true,
+      transform: true,
+      skipMissingProperties: false,
+      whitelist: true,
+      forbidNonWhitelisted: true,
+      forbidUnknownValues: true,
+      errorHttpStatusCode: 422,
+    }),
+  );
   app.useGlobalInterceptors(
     new ValidationExceptionInterceptor(),
-    new ResponseInterceptor()
-  )
-
+    new ResponseInterceptor(),
+  );
 
   const config = new DocumentBuilder()
     .setTitle('PH API')
@@ -44,7 +44,6 @@ async function bootstrap() {
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
-
 
   const port = process.env.PORT || 3000;
   await app.listen(port);

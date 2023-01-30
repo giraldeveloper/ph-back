@@ -16,7 +16,7 @@ export class ValidationExceptionInterceptor implements NestInterceptor {
   private readonly logger = new Logger(ValidationExceptionInterceptor.name);
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     return next.handle().pipe(
-      catchError(e => {
+      catchError((e) => {
         this.logger.error(`ERROR_DETAIL: ${JSON.stringify(e)}`);
         this.logger.error(e);
 
@@ -25,14 +25,20 @@ export class ValidationExceptionInterceptor implements NestInterceptor {
         if (e instanceof HttpException) {
           error = e;
         } else if (e instanceof QueryFailedError) {
-          error = new HttpException(e, HttpStatus.UNPROCESSABLE_ENTITY);
+          error = new HttpException(e, HttpStatus.NOT_ACCEPTABLE);
         } else {
           error = new HttpException(e, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
-        let errorResponse: ErrorResponse = Object.assign({}, ResponseEnums[error.getStatus()])
+        const errorResponse: ErrorResponse = Object.assign(
+          {},
+          ResponseEnums[error.getStatus()],
+        );
 
-        if (e.response && error.getStatus() === HttpStatus.UNPROCESSABLE_ENTITY) {
+        if (
+          e.response &&
+          error.getStatus() === HttpStatus.UNPROCESSABLE_ENTITY
+        ) {
           if (typeof e.response.message == 'string') {
             e.response.message = [e.response.message];
           }
