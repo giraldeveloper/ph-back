@@ -6,13 +6,16 @@ import {
   Patch,
   Param,
   Delete,
+  UseGuards,
 } from '@nestjs/common';
 import { VehiculoService } from './vehiculo.service';
 import { VehiculoDto } from './dto/vehiculo.dto';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 
 @ApiTags('vehiculo')
 @Controller('vehiculo')
+@UseGuards(JwtAuthGuard)
 export class VehiculoController {
   constructor(private readonly vehiculoService: VehiculoService) {}
 
