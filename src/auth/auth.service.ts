@@ -1,10 +1,11 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { UsersService } from 'src/users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class AuthService {
+  private readonly logger = new Logger(AuthService.name);
   constructor(
     private usersService: UsersService,
     private jwtService: JwtService,
@@ -16,7 +17,7 @@ export class AuthService {
 
     if (user && isPass) {
       const { password, ...result } = user;
-      console.log('Password match', password);
+      this.logger.debug('Password match', password);
       return result;
     }
     return null;
