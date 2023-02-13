@@ -1,23 +1,26 @@
 import { Injectable } from '@nestjs/common';
-
-export type User = any;
+import { CreateUserDto } from './dto/create-user.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
 
 @Injectable()
 export class UsersService {
-  private readonly users = [
-    {
-      userId: 1,
-      username: 'kevin castro',
-      password: 'caspin123',
-    },
-    {
-      userId: 2,
-      username: 'maria',
-      password: 'guess',
-    },
-  ];
+  create(createUserDto: CreateUserDto) {
+    return `This action adds a new user ${JSON.stringify(createUserDto)}`;
+  }
 
-  async findOne(username: string): Promise<User | undefined> {
-    return this.users.find(user => user.username === username);
+  findAll() {
+    return `This action returns all users`;
+  }
+
+  findOne(id: number) {
+    return `This action returns a #${id} user`;
+  }
+
+  update(id: number, updateUserDto: UpdateUserDto) {
+    return `This action updates a #${id} user ${JSON.stringify(updateUserDto)}`;
+  }
+
+  remove(id: number) {
+    return `This action removes a #${id} user`;
   }
 }
