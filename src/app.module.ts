@@ -7,6 +7,10 @@ import { ConfigModule } from '@nestjs/config';
 import { PersonaModule } from './persona/persona.module';
 import { VehiculoModule } from './vehiculo/vehiculo.module';
 import { ContactoModule } from './contacto/contacto.module';
+import { AuthModule } from './auth/auth.module';
+import { UsersModule } from './users/users.module';
+import { APP_GUARD } from '@nestjs/core';
+import { JwtAuthGuard } from './auth/jwt-auth.guard';
 
 @Module({
   imports: [
@@ -26,8 +30,15 @@ import { ContactoModule } from './contacto/contacto.module';
     PersonaModule,
     VehiculoModule,
     ContactoModule,
+    AuthModule,
+    UsersModule,
   ],
   controllers: [AppController],
-  providers: [],
+  providers: [
+    {
+      provide: APP_GUARD,
+      useClass: JwtAuthGuard,
+    },
+  ],
 })
 export class AppModule {}
