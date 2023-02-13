@@ -6,16 +6,13 @@ import {
   Patch,
   Param,
   Delete,
-  UseGuards,
 } from '@nestjs/common';
 import { InmuebleService } from './inmueble.service';
 import { CreateInmuebleDto } from './dto/create-inmueble.dto';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
-import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 
 @ApiTags('imbueble')
 @Controller('inmueble')
-@UseGuards(JwtAuthGuard)
 export class InmuebleController {
   constructor(private readonly inmuebleService: InmuebleService) {}
 

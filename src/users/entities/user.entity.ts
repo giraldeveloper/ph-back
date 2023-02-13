@@ -1,8 +1,15 @@
 import { CommonBaseEntityAudit } from 'src/common/entities/CommonBaseEntityAudit';
-import { Entity, Column, PrimaryGeneratedColumn, BeforeInsert } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  BeforeInsert,
+  Index,
+} from 'typeorm';
 import * as bcrypt from 'bcrypt';
 
 @Entity('user')
+@Index('user_idx', ['username'], { unique: true })
 export class User extends CommonBaseEntityAudit {
   @PrimaryGeneratedColumn('uuid')
   id: string;
@@ -22,7 +29,7 @@ export class User extends CommonBaseEntityAudit {
   @Column({ length: 255, name: 'foto', nullable: true })
   foto: string;
 
-  @Column({ default: true })
+  @Column({ name: 'estado', default: true })
   estado: boolean;
 
   @Column({ length: 45, name: 'perfil', nullable: false })

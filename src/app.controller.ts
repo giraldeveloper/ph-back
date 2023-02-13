@@ -1,22 +1,12 @@
-import {
-  Controller,
-  Get,
-  HttpCode,
-  Logger,
-  Request,
-  Post,
-  UseGuards,
-} from '@nestjs/common';
+import { Controller, Get, HttpCode, Logger } from '@nestjs/common';
 import { version } from '../package.json';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
-import { JwtAuthGuard } from './auth/jwt-auth.guard';
-import { LocalAuthGuard } from './auth/local-auth.guard';
-import { AuthService } from './auth/auth.service';
+import { SkipAuth } from './common/decorators/skip-auth.decorator';
 
 @ApiTags('healthcheck')
 @Controller()
+@SkipAuth()
 export class AppController {
-  constructor(private authService: AuthService) {}
   private readonly logger = new Logger(AppController.name);
 
   @Get('/healthcheck')
@@ -25,17 +15,5 @@ export class AppController {
   async check() {
     this.logger.debug(`healthcheck on ${Date.now()}`);
     return { status: 'OK', version: version };
-  }
-
-  @UseGuards(LocalAuthGuard)
-  @Post('auth/login')
-  async login(@Request() req) {
-    return this.authService.login(req.user);
-  }
-
-  @UseGuards(JwtAuthGuard)
-  @Get('profile')
-  getProfile(@Request() req) {
-    return req.user;
   }
 }
