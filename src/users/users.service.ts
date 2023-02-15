@@ -8,6 +8,7 @@ import { throwError } from 'rxjs';
 
 @Injectable()
 export class UsersService {
+  private readonly logger = new Logger(UsersService.name);
   constructor(
     @InjectRepository(User)
     private userRepository: Repository<User>,
@@ -15,7 +16,7 @@ export class UsersService {
 
   async create(createUserDto: CreateUserDto) {
     try {
-      Logger.debug(`::: Creating user: ${JSON.stringify(createUserDto)}`);
+      this.logger.debug(`::: Creating user: ${JSON.stringify(createUserDto)}`);
       const { userName, email, password, nombre, foto, perfil } = createUserDto;
 
       let user = new User();
@@ -49,7 +50,7 @@ export class UsersService {
 
   async update(id: string, userDto: UpdateUserDto) {
     try {
-      Logger.debug(`::: Updating user: ${JSON.stringify(userDto)}`);
+      this.logger.debug(`::: Updating user: ${JSON.stringify(userDto)}`);
       const { userName, email, password, nombre, foto, perfil } = userDto;
 
       let user = await this.userRepository.findOneBy({ id });
