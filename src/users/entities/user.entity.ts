@@ -32,8 +32,8 @@ export class User extends CommonBaseEntityAudit {
   @Column({ name: 'estado', default: true })
   estado: boolean;
 
-  @Column({ length: 45, name: 'perfil', nullable: false })
-  perfil: string;
+  @Column({ name: 'perfil', nullable: false })
+  perfil: number;
 
   @BeforeInsert() async hashPassword() {
     this.password = await bcrypt.hash(this.password, 10);

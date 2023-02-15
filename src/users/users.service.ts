@@ -1,38 +1,76 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
+import { throwError } from 'rxjs';
 
 @Injectable()
 export class UsersService {
+  private readonly logger = new Logger(UsersService.name);
   constructor(
     @InjectRepository(User)
     private userRepository: Repository<User>,
   ) {}
 
-  create(createUserDto: CreateUserDto) {
-    return `This action adds a new user ${JSON.stringify(createUserDto)}`;
+  async create(createUserDto: CreateUserDto) {
+    try {
+      this.logger.debug(`::: Creating user: ${JSON.stringify(createUserDto)}`);
+      const { userName, email, password, nombre, foto, perfil } = createUserDto;
+
+      let user = new User();
+
+      user.username = userName;
+      user.email = email;
+      user.password = password;
+      user.nombre = nombre;
+      user.foto = foto;
+      user.perfil = perfil;
+
+      user = await this.userRepository.save(user);
+
+      return user;
+    } catch (error) {
+      return throwError(() => error);
+    }
   }
 
-  findAll() {
-    return `This action returns all users`;
+  findAll(): Promise<User[]> {
+    return this.userRepository.find();
   }
 
-  findOne(id: string) {
-    return this.userRepository.findOneBy({ id });
+  async findOne(id: string): Promise<User> {
+    return await this.userRepository.findOneBy({ id });
   }
 
-  findOneByUsername(username: string) {
-    return this.userRepository.findOneBy({ username });
+  async findOneByUsername(username: string): Promise<User> {
+    return await this.userRepository.findOneBy({ username });
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user ${JSON.stringify(updateUserDto)}`;
+  async update(id: string, userDto: UpdateUserDto) {
+    try {
+      this.logger.debug(`::: Updating user: ${JSON.stringify(userDto)}`);
+      const { userName, email, password, nombre, foto, perfil } = userDto;
+
+      let user = await this.userRepository.findOneBy({ id });
+
+      user.username = userName;
+      user.email = email;
+      user.password = password;
+      user.nombre = nombre;
+      user.foto = foto;
+      user.perfil = perfil;
+
+      user = await this.userRepository.save(user);
+
+      return user;
+    } catch (error) {
+      return throwError(() => error);
+    }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  async remove(id: string): Promise<void> {
+    await this.userRepository.delete(id);
   }
 }

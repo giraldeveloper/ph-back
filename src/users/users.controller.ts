@@ -23,27 +23,28 @@ export class UsersController {
   }
 
   @Get()
-  findAll() {
-    return this.usersService.findAll();
+  async findAll() {
+    const find = await this.usersService.findAll();
+    return find.map(user => {
+      delete user.password;
+      return user;
+    });
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.usersService.findOne(id);
-  }
-
-  @Get(':username')
-  findUsername(@Param('username') username: string) {
-    return this.usersService.findOneByUsername(username);
+  async findOne(@Param('id') id: string) {
+    const user = await this.usersService.findOne(id);
+    delete user.password;
+    return user;
   }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.usersService.update(+id, updateUserDto);
+    return this.usersService.update(id, updateUserDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.usersService.remove(+id);
+    return this.usersService.remove(id);
   }
 }

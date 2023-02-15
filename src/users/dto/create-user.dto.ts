@@ -4,6 +4,7 @@ import {
   Length,
   IsOptional,
   IsEmail,
+  IsInt,
 } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
@@ -35,12 +36,15 @@ export class CreateUserDto {
   @IsString()
   @IsOptional()
   @Length(1, 255)
-  @ApiProperty({ example: '', description: 'Foto perfil' })
+  @ApiProperty({
+    example: 'https://my-images.com/file/5jDdyxw',
+    description: 'Foto perfil',
+  })
   foto: string;
 
-  @IsString()
+  @IsInt()
   @IsNotEmpty()
   @Length(1, 45)
-  @ApiProperty({ example: '', description: '' })
-  perfil: string;
+  @ApiProperty({ example: '1', description: 'Perfil' })
+  perfil: number;
 }
