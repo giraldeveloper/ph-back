@@ -2,7 +2,6 @@ import { Strategy } from 'passport-local';
 import { PassportStrategy } from '@nestjs/passport';
 import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class LocalStrategy extends PassportStrategy(Strategy) {
@@ -13,8 +12,7 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
 
   async validate(username: string, password: string): Promise<any> {
     this.logger.debug(`validate ${JSON.stringify({ username, password })}`);
-    const newPassword = await bcrypt.hash(password, 10);
-    const user = await this.authService.validateUser(username, newPassword);
+    const user = await this.authService.validateUser(username, password);
 
     if (!user) {
       this.logger.error(`error`);

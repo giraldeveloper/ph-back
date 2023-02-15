@@ -17,7 +17,7 @@ export class AuthService {
 
     let isPass = false;
 
-    if (user) isPass = await bcrypt.compare(user.password, pass);
+    if (user) isPass = await bcrypt.compare(pass, user.password);
 
     if (user && isPass) {
       const { password, ...result } = user;
