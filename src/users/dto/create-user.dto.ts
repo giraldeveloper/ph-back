@@ -43,8 +43,6 @@ export class CreateUserDto {
   foto: string;
 
   @IsInt()
-  @IsNotEmpty()
-  @Length(1, 45)
   @ApiProperty({ example: '1', description: 'Perfil' })
   perfil: number;
 }
